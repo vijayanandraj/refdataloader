@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
@@ -12,25 +13,21 @@ import javax.sql.DataSource;
 @Configuration
 public class DataSourceConfig {
 
-    @Bean(name = "oracleDataSource")
-    @ConfigurationProperties(prefix = "oracle.datasource")
-    public DataSource oracleDataSource() {
+    @Bean(name = "sqlServerDataSource")
+    @ConfigurationProperties(prefix = "sqlserver.datasource")
+    public DataSource sqlServerDataSource() {
         return DataSourceBuilder.create().build();
     }
 
-    @Bean(name = "mysqlDataSource")
-    @ConfigurationProperties(prefix = "mysql.datasource")
-    public DataSource mysqlDataSource() {
+    @Primary
+    @Bean(name = "dataSource")
+    @ConfigurationProperties(prefix = "spring.datasource")
+    public DataSource dataSource() {
         return DataSourceBuilder.create().build();
     }
 
-    @Bean(name = "oracleJdbcTemplate")
-    public JdbcTemplate oracleJdbcTemplate(@Qualifier("oracleDataSource") DataSource dataSource) {
-        return new JdbcTemplate(dataSource);
-    }
-
-    @Bean(name = "mysqlJdbcTemplate")
-    public JdbcTemplate mysqlJdbcTemplate(@Qualifier("mysqlDataSource") DataSource dataSource) {
+    @Bean(name = "sqlServerJdbcTemplate")
+    public JdbcTemplate sqlServerJdbcTemplate(@Qualifier("sqlServerDataSource") DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
 
